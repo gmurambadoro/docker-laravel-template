@@ -4,6 +4,7 @@ services:
       context: .
       dockerfile: ./Dockerfile
     restart: unless-stopped
+    container_name: laravel-app
     volumes:
       - ./000-default.conf:/etc/apache2/sites-available/000-default.conf:ro
       - ./.bashrc:/root/.bashrc:ro
