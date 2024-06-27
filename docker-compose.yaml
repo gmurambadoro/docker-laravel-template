@@ -1,0 +1,37 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    restart: unless-stopped
+    volumes:
+      - ./000-default.conf:/etc/apache2/sites-available/000-default.conf:ro
+      - ./.bashrc:/root/.bashrc:ro
+      - ./:/var/www/laravel
+    ports:
+      - "8080:80"
+
+  phpmyadmin:
+    image: phpmyadmin
+    restart: unless-stopped
+    depends_on: [ db ]
+    ports:
+      - "8081:80"
+    environment:
+      PMA_HOST: db
+      PMA_USER: laravel
+      PMA_PASSWORD: password
+
+  db:
+    image: mariadb:lts
+    restart: unless-stopped
+    volumes:
+      - db_data:/var/lib/mysql
+    environment:
+      MARIADB_RANDOM_ROOT_PASSWORD: yes
+      MARIADB_DATABASE: laravel
+      MARIADB_USER: laravel
+      MARIADB_PASSWORD: password
+
+volumes:
+  db_data:
